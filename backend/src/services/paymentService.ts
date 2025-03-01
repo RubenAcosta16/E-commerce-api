@@ -6,6 +6,10 @@ import { CartError, PaymentError } from "../utils/errorFactory";
 import productService from "./productService";
 import { STRIPE_SECRET_KEY } from "../config/";
 
+if (!STRIPE_SECRET_KEY) {
+  throw new Error("STRIPE_SECRET_KEY is not defined");
+}
+
 // falta lo de confirm payment
 // implementar algo para ejecutar cuandoe el pago este hechi
 
@@ -93,10 +97,13 @@ const stripeWebhook = async ({ body, sig }: PropsWeb) => {
   let event: StripeEvent;
 
   try {
+    if (!sig) {
+      throw new PaymentError("Missing signature");
+    }
     event = stripe.webhooks.constructEvent(
       body,
       sig,
-      STRIPE_SECRET_KEY
+      STRIPE_SECRET_KEY!
     ) as StripeEvent;
   } catch  {
     throw new PaymentError(`Webhook Error`);
