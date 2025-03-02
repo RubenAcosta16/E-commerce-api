@@ -103,7 +103,7 @@ const stripeWebhook = async ({ body, sig }: PropsWeb) => {
     event = stripe.webhooks.constructEvent(
       body, // Aquí se pasa el cuerpo sin procesar
       sig,
-      STRIPE_SECRET_KEY!
+      "whsec_ca5d8bd08a5e2570c0c7e35306d73a6b277f28e8b20de2e7c1a1433d8c01629f"
     );
   } catch (error) {
     console.error('Error al verificar el webhook:', error); // Agrega un registro de error
