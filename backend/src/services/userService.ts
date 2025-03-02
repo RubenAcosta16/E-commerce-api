@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { User } from "../models/userModel";
 import { UserType } from "../types";
 import { SALTROUNDS, SECRET_JWT_KEY } from "../config";
