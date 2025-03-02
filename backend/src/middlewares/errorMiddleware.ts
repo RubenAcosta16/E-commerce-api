@@ -5,6 +5,10 @@ import {
   NotFoundError,
   AuthError,
   ImageError,
+  CartError,
+  CategoryError,
+  PaymentError,
+  ProductError,
 } from "../utils/errorFactory";
 
 const errorHandler = (
@@ -16,7 +20,11 @@ const errorHandler = (
   if (
     err instanceof UserError ||
     err instanceof ImageError ||
-    err instanceof AuthError
+    err instanceof AuthError ||
+    err instanceof ProductError ||
+    err instanceof PaymentError ||
+    err instanceof CategoryError ||
+    err instanceof CartError
   ) {
     return res.status(400).json({
       message: err.message,

@@ -107,7 +107,7 @@ const stripeWebhook = async ({ body, sig }: PropsWeb) => {
     );
   } catch (error) {
     console.error('Error al verificar el webhook:', error); // Agrega un registro de error
-    throw new PaymentError(`Webhook Error`);
+    throw new PaymentError(`Webhook Error ${error}`);
   }
 
   if (event.type === "checkout.session.completed") {
