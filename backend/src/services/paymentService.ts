@@ -101,17 +101,21 @@ const stripeWebhook = async ({ body, sig }: PropsWeb) => {
       throw new PaymentError("Missing signature");
     }
     event = stripe.webhooks.constructEvent(
-      body,
+      body, // Aquí se pasa el cuerpo sin procesar
       sig,
       STRIPE_SECRET_KEY!
     );
   } catch (error) {
     console.error('Error al verificar el webhook:', error); // Agrega un registro de error
-    throw new PaymentError(`Webhook Error ${error}`);
+    throw new PaymentError(`Webhook Error: ${error}`);
   }
+
+  console.log('Webhook event type:', event.type); // Registro del tipo de evento
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
+
+    console.log('Session data:', session); // Registro de datos de la sesión
 
     const payment = await PaymentModel.findOne({ transactionId: session.id });
     if (!payment) {
@@ -121,10 +125,7 @@ const stripeWebhook = async ({ body, sig }: PropsWeb) => {
     // Actualizar el estado del pago
     payment.status = "completed";
     await payment.save();
-
-    // Aquí puedes agregar la lógica para limpiar el carrito, si es necesario
-    // await cart.updateOne({ userId: userId }, { $set: { products: [] } });
-    // await cart.save();
+    console.log('Payment status updated to completed'); // Registro de actualización
   }
 };
 
