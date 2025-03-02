@@ -1,7 +1,7 @@
 import stripe from "../config/stripeConfig";
 import { CartModel } from "../models/cartModel";
 import { PaymentModel } from "../models/paymentModel";
-import { StripeEvent } from "../types";
+// import { StripeEvent } from "../types";
 import { CartError, PaymentError } from "../utils/errorFactory";
 import productService from "./productService";
 import { STRIPE_SECRET_KEY } from "../config/";
@@ -82,8 +82,8 @@ const createPayment = async (userId: string): Promise<string | null> => {
 
   await payment.save();
 
-  // await cart.updateOne({ userId: userId }, { $set: { products: [] } });
-  // await cart.save();
+  await cart.updateOne({ userId: userId }, { $set: { products: [] } });
+  await cart.save();
 
   return session.url;
 };
@@ -94,7 +94,7 @@ interface PropsWeb {
 }
 
 const stripeWebhook = async ({ body, sig }: PropsWeb) => {
-  let event: StripeEvent;
+  let event;
 
   try {
     if (!sig) {
@@ -104,8 +104,9 @@ const stripeWebhook = async ({ body, sig }: PropsWeb) => {
       body,
       sig,
       STRIPE_SECRET_KEY!
-    ) as StripeEvent;
-  } catch  {
+    );
+  } catch (error) {
+    console.error('Error al verificar el webhook:', error); // Agrega un registro de error
     throw new PaymentError(`Webhook Error`);
   }
 
@@ -120,6 +121,10 @@ const stripeWebhook = async ({ body, sig }: PropsWeb) => {
     // Actualizar el estado del pago
     payment.status = "completed";
     await payment.save();
+
+    // Aquí puedes agregar la lógica para limpiar el carrito, si es necesario
+    // await cart.updateOne({ userId: userId }, { $set: { products: [] } });
+    // await cart.save();
   }
 };
 
