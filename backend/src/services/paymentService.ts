@@ -90,7 +90,7 @@ const createPayment = async (userId: string): Promise<string | null> => {
 
 interface PropsWeb {
   sig: string | string[] | undefined;
-  body: any;
+  body: Buffer; // Cambia el tipo a Buffer
 }
 
 const stripeWebhook = async ({ body, sig }: PropsWeb) => {
@@ -103,11 +103,11 @@ const stripeWebhook = async ({ body, sig }: PropsWeb) => {
     event = stripe.webhooks.constructEvent(
       body, // Aquí se pasa el cuerpo sin procesar
       sig,
-      "whsec_ca5d8bd08a5e2570c0c7e35306d73a6b277f28e8b20de2e7c1a1433d8c01629f"
+      STRIPE_SECRET_KEY!
     );
   } catch (error) {
     console.error('Error al verificar el webhook:', error); // Agrega un registro de error
-    throw new PaymentError(`Webhook Error: ${error}`);
+    throw new PaymentError(`Webhook Error: ${error.message}`);
   }
 
   console.log('Webhook event type:', event.type); // Registro del tipo de evento
