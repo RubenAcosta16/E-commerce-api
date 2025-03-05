@@ -8,6 +8,18 @@ Instala las dependencias utilizando `pnpm`:
 pnpm install
 ```
 
+Tambien las variables de entorno:
+- **PORT = 
+- **ADMIN_ID=
+- **MONGODB_URI=
+- **SALTROUNDS=
+- **SECRET_JWT_KEY=
+- **FRONTEND_URL=
+- **TU_CLOUD_NAME=
+- **TU_API_KEY=
+- **TU_API_SECRET=
+- **STRIPE_SECRET_KEY=
+
 Para iniciar el servidor en modo de desarrollo, ejecuta el siguiente comando:
 
 ```bash
